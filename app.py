@@ -1,6 +1,7 @@
 import streamlit as st
 from openai import OpenAI
 import os
+import pdfplumber
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,14 +10,26 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 st.set_page_config(page_title="AI Job Screener", page_icon="📄")
 st.title("AI Job Application Screener")
-st.write("Paste a job description and your resume to get a match score and feedback.")
+st.write("Paste a job description and upload or paste your resume to get a match score and feedback.")
 
 job_description = st.text_area("Job Description", height=200, placeholder="Paste the job posting here...")
-resume = st.text_area("Your Resume", height=200, placeholder="Paste your resume text here...")
+
+st.subheader("Your Resume")
+uploaded_file = st.file_uploader("Upload your resume as a PDF", type="pdf")
+resume_text = st.text_area("Or paste your resume text here", height=200, placeholder="Paste your resume text here...")
+
+resume = ""
+if uploaded_file is not None:
+    with pdfplumber.open(uploaded_file) as pdf:
+        for page in pdf.pages:
+            resume += page.extract_text() or ""
+    st.success("PDF uploaded and extracted successfully.")
+elif resume_text:
+    resume = resume_text
 
 if st.button("Analyze"):
     if not job_description or not resume:
-        st.warning("Please fill in both fields.")
+        st.warning("Please fill in the job description and provide your resume.")
     else:
         with st.spinner("Analyzing..."):
             prompt = f"""
