@@ -2,7 +2,7 @@
 
 An AI-powered web app that analyzes how well your resume matches a job description. Paste in a job posting and your resume, and get back an instant match score, a list of missing skills, and specific suggestions to improve your application.
 
-**Live Demo:** [[https://jobscreener-ciosgbjjhtknewzejt9s38.streamlit.app/]
+**Live Demo:** [https://jobscreener-ciosgbjjhtknewzejt9s38.streamlit.app/]
 
 ---
 
